@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsoleGUI.Windows.Base
@@ -74,7 +75,7 @@ namespace ConsoleGUI.Windows.Base
             }
         }
 
-        // TODO: speed up, currently takes ~482 ms to draw uncompressable frame (all random, no repeating)
+        // TODO: speed up, currently takes ~482 ms to draw uncompressable frame (all random, no repeating) at default resolution
         public static void WriteBufferToConsole(ConsoleCharacter[,] ScreenBuffer, int x = 0, int y = 0, bool DefaultNullToBlack = false)
         {
             int ConsoleWidth = Console.BufferWidth;
@@ -88,15 +89,13 @@ namespace ConsoleGUI.Windows.Base
                 Height = ConsoleHeight;
 
             // Split Buffer into sections with matching colors
+            List<ConsoleString> CompressedBuffer = new();
+            StringBuilder Text = new(Console.BufferWidth);
+            ConsoleColor? Foreground = null;
+            ConsoleColor? Background = null;
 
-            List<ConsoleString>[] CompressedBuffer = new List<ConsoleString>[Height];
-            Parallel.For(0, Height, CurrentRow =>
+            for (int CurrentRow = 0; CurrentRow < Height; CurrentRow++)
             {
-                List<ConsoleString> consoleStrings = new();
-                StringBuilder Text = new(Console.BufferWidth);
-                ConsoleColor? Foreground = null;
-                ConsoleColor? Background = null;
-
                 for (int xPos = 0; xPos < Width; xPos++)
                 {
                     ConsoleCharacter consoleCharacter = ScreenBuffer[xPos, CurrentRow];
@@ -118,6 +117,7 @@ namespace ConsoleGUI.Windows.Base
 
                     if (consoleCharacter.ForegroundColor == Foreground && consoleCharacter.BackgroundColor == Background)
                         Text.Append(consoleCharacter);
+
                     else
                     {
                         ConsoleString consoleString = new()
@@ -126,26 +126,21 @@ namespace ConsoleGUI.Windows.Base
                             BackgroundColor = Background.GetValueOrDefault(),
                             Text = Text.ToString()
                         };
-                        consoleStrings.Add(consoleString);
+                        CompressedBuffer.Add(consoleString);
 
                         Foreground = consoleCharacter.ForegroundColor;
                         Background = consoleCharacter.BackgroundColor;
                         Text.Clear();
                         Text.Append(consoleCharacter.Character);
-
+                    }
+                    if (CurrentRow != Height - 1 && xPos == Width - 1)
+                    {
                         if (xPos == Width - 1)
                         {
-                            consoleString = new()
-                            {
-                                ForegroundColor = Foreground!.Value,
-                                BackgroundColor = Background!.Value,
-                                Text = Text.ToString()
-                            };
-                            consoleStrings.Add(consoleString);
-                            continue;
+                            Text.Append(Environment.NewLine);
                         }
                     }
-                    if (xPos == Width - 1)
+                    if (CurrentRow == Height - 1 && xPos == Width - 1)
                     {
                         ConsoleString consoleString = new()
                         {
@@ -153,30 +148,16 @@ namespace ConsoleGUI.Windows.Base
                             BackgroundColor = Background!.Value,
                             Text = Text.ToString()
                         };
-                        consoleStrings.Add(consoleString);
+                        CompressedBuffer.Add(consoleString);
                     }
                 }
-
-                CompressedBuffer[CurrentRow] = consoleStrings;
-            });
+            }
             Console.SetCursorPosition(0, 0);
-            int BufferCount = CompressedBuffer.Length;
-            for (int i = 0; i < BufferCount; i++)
+            foreach (var TextBit in CompressedBuffer)
             {
-                List<ConsoleString> line = CompressedBuffer[i];
-                int count = line.Count;
-                for (int j = 0; j < count; j++)
-                {
-                    ConsoleString consoleString = line[j];
-                    Console.ForegroundColor = consoleString.ForegroundColor;
-                    Console.BackgroundColor = consoleString.BackgroundColor;
-
-                    // Add \n to make resizing break a bit less
-                    string enter = string.Empty;
-                    if (j == count - 1 && i != BufferCount - 1)
-                        enter = "\n";
-                    Console.Write(consoleString.Text + enter);
-                }
+                Console.ForegroundColor = TextBit.ForegroundColor;
+                Console.BackgroundColor = TextBit.BackgroundColor;
+                Console.Write(TextBit.Text);
             }
         }
     }
