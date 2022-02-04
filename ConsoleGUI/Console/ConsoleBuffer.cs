@@ -21,6 +21,12 @@ namespace ConsoleGUI.Windows.Base
     }
     public static class ConsoleBuffer
     {
+        public enum RenderSupport
+        {
+            Standard,
+            ANSI
+        }
+
         public static ConsoleColor DefaultTextColor = ConsoleColor.White;
         public static ConsoleColor DefaultBackgroundColor = ConsoleColor.Black;
         public static void BufferWrite(ref ConsoleCharacter[,] Buffer, string text, ConsoleBufferWritingSettings consoleBufferWritingSettings)
@@ -77,6 +83,27 @@ namespace ConsoleGUI.Windows.Base
 
         // TODO: speed up, currently takes ~482 ms to draw uncompressable frame (all random, no repeating) at default resolution
         public static void WriteBufferToConsole(ConsoleCharacter[,] ScreenBuffer, int x = 0, int y = 0, bool DefaultNullToBlack = false)
+        {
+            List<ConsoleString> CompressedBuffer = CompressBuffer(ScreenBuffer, x, y, DefaultNullToBlack);
+            Console.SetCursorPosition(0, 0);
+            switch (WindowManager.RenderSupport)
+            {
+                default:
+                case RenderSupport.Standard:
+                    foreach (var TextBit in CompressedBuffer)
+                    {
+                        Console.ForegroundColor = TextBit.ForegroundColor;
+                        Console.BackgroundColor = TextBit.BackgroundColor;
+                        Console.Write(TextBit.Text);
+                    }
+                    break;
+                case RenderSupport.ANSI:
+
+                    break;
+            }
+        }
+
+        public static List<ConsoleString> CompressBuffer(ConsoleCharacter[,] ScreenBuffer, int x, int y, bool DefaultNullToBlack)
         {
             int ConsoleWidth = Console.BufferWidth;
             int ConsoleHeight = Console.BufferHeight;
@@ -152,13 +179,8 @@ namespace ConsoleGUI.Windows.Base
                     }
                 }
             }
-            Console.SetCursorPosition(0, 0);
-            foreach (var TextBit in CompressedBuffer)
-            {
-                Console.ForegroundColor = TextBit.ForegroundColor;
-                Console.BackgroundColor = TextBit.BackgroundColor;
-                Console.Write(TextBit.Text);
-            }
+
+            return CompressedBuffer;
         }
     }
 }

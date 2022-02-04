@@ -2,18 +2,25 @@
 using RW.EventfulConcurrentQueue;
 using System;
 using System.Collections.Generic;
+using static ConsoleGUI.Windows.Base.ConsoleBuffer;
 
 namespace ConsoleGUI
 {
     public class WindowManager
     {
+        // Singleton
         private readonly static Lazy<WindowManager> _lazy = new(() => new WindowManager());
         public static WindowManager Instance { get { return _lazy.Value; } }
+
+        public static RenderSupport RenderSupport = RenderSupport.Standard;
         private WindowManager()
         {
             BufferQueue.ItemEnqueued += WindowsToBuffer;
         }
 
+        public List<Window> Windows = new();
+        public bool Writing = false;
+        private readonly EventfulConcurrentQueue<ConsoleCharacter[,]> BufferQueue = new();
         private void WindowsToBuffer(object sender, EventArgs e)
         {
             if (Writing)
@@ -25,17 +32,11 @@ namespace ConsoleGUI
 
             Writing = true;
 
-            //if (Console.BufferHeight != Console.WindowHeight)
-            //    Console.Clear();
             ConsoleBuffer.WriteBufferToConsole(buffer, DefaultNullToBlack: true);
             Writing = false;
             WindowsToBuffer(sender, e);
         }
 
-        public List<Window> Windows = new();
-        public bool Writing = false;
-
-        private EventfulConcurrentQueue<ConsoleCharacter[,]> BufferQueue = new();
         public void UpdateScreen()
         {
             ConsoleCharacter[,] Buffer = new ConsoleCharacter[startingBufferWidth, startingBufferHeight];

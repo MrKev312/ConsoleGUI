@@ -9,7 +9,7 @@ namespace TestProgram
         public static void Main()
         {
 #if DEBUG
-            Console.WriteLine("Waiting for keypress to start");
+            Console.WriteLine("\u001b[31mWaiting for keypress!\u001b[0m");
             Console.ReadKey();
             Console.Clear();
 #endif
