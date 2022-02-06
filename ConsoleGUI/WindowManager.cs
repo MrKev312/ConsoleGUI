@@ -12,10 +12,16 @@ namespace ConsoleGUI
         private readonly static Lazy<WindowManager> _lazy = new(() => new WindowManager());
         public static WindowManager Instance { get { return _lazy.Value; } }
 
-        public static RenderSupport RenderSupport = RenderSupport.Standard;
+
         private WindowManager()
         {
             BufferQueue.ItemEnqueued += WindowsToBuffer;
+        }
+
+        public static RenderSupport RenderSupport { get; private set; } = RenderSupport.Standard;
+        public  static void SetScreenRenderer(RenderSupport renderSupport)
+        {
+            RenderSupport = renderSupport;
         }
 
         public List<Window> Windows = new();
@@ -32,7 +38,7 @@ namespace ConsoleGUI
 
             Writing = true;
 
-            ConsoleBuffer.WriteBufferToConsole(buffer, DefaultNullToBlack: true);
+            WriteBufferToConsole(buffer, DefaultNullToBlack: true);
             Writing = false;
             WindowsToBuffer(sender, e);
         }
@@ -42,7 +48,7 @@ namespace ConsoleGUI
             ConsoleCharacter[,] Buffer = new ConsoleCharacter[startingBufferWidth, startingBufferHeight];
             foreach (Window Window in Windows)
             {
-                ConsoleBuffer.OverlayBuffer(ref Buffer, Window.WindowBuffer, Window.PostionX, Window.PostionY);
+                OverlayBuffer(ref Buffer, Window.WindowBuffer, Window.PostionX, Window.PostionY);
             }
             BufferQueue.Enqueue(Buffer);
         }
@@ -74,71 +80,71 @@ namespace ConsoleGUI
 
         public static void SetupWindow()
         {
-            startingBufferHeight = Console.BufferHeight;
-            startingBufferWidth = Console.BufferWidth;
+            startingBufferHeight = System.Console.BufferHeight;
+            startingBufferWidth = System.Console.BufferWidth;
 
-            int whereToMove = Console.CursorTop + 1; //Move one line below visible
-            if (whereToMove < Console.WindowHeight) //If cursor is not on bottom line of visible
-                whereToMove = Console.WindowHeight + 1;
+            int whereToMove = System.Console.CursorTop + 1; //Move one line below visible
+            if (whereToMove < System.Console.WindowHeight) //If cursor is not on bottom line of visible
+                whereToMove = System.Console.WindowHeight + 1;
 
-            if (Console.BufferHeight < whereToMove + Console.WindowHeight) //Buffer is too small
-                Console.BufferHeight = whereToMove + Console.WindowHeight;
+            if (System.Console.BufferHeight < whereToMove + System.Console.WindowHeight) //Buffer is too small
+                System.Console.BufferHeight = whereToMove + System.Console.WindowHeight;
 
-            Console.MoveBufferArea(0, 0, Console.WindowWidth, Console.WindowHeight, 0, whereToMove);
+            System.Console.MoveBufferArea(0, 0, System.Console.WindowWidth, System.Console.WindowHeight, 0, whereToMove);
 
-            Console.CursorVisible = false;
-            startingX = Console.CursorTop;
-            startingY = Console.CursorLeft;
-            startingForegroundColour = Console.ForegroundColor;
-            startingBackgroundColour = Console.BackgroundColor;
+            System.Console.CursorVisible = false;
+            startingX = System.Console.CursorTop;
+            startingY = System.Console.CursorLeft;
+            startingForegroundColour = System.Console.ForegroundColor;
+            startingBackgroundColour = System.Console.BackgroundColor;
 
-            Console.CursorTop = 0;
-            Console.CursorLeft = 0;
+            System.Console.CursorTop = 0;
+            System.Console.CursorLeft = 0;
         }
 
         public static void EndWindow()
         {
-            Console.ForegroundColor = startingForegroundColour;
-            Console.BackgroundColor = startingBackgroundColour;
+            System.Console.ForegroundColor = startingForegroundColour;
+            System.Console.BackgroundColor = startingBackgroundColour;
 
 
-            Console.Clear();
-            Console.CursorVisible = true;
+            System.Console.Clear();
+            System.Console.CursorVisible = true;
         }
 
         //public static void UpdateWindow(int width, int height)
         //{
-        //    Console.CursorVisible = false;
+        //    System.Console.CursorVisible = false;
 
-        //    if (width > Console.BufferWidth) //new Width is bigger then buffer
+        //    if (width > System.Console.BufferWidth) //new Width is bigger then buffer
         //    {
-        //        Console.BufferWidth = width;
-        //        Console.WindowWidth = width;
+        //        System.Console.BufferWidth = width;
+        //        System.Console.WindowWidth = width;
         //    }
         //    else
         //    {
-        //        Console.WindowWidth = width;
-        //        Console.BufferWidth = width;
+        //        System.Console.WindowWidth = width;
+        //        System.Console.BufferWidth = width;
         //    }
 
-        //    if (height > Console.BufferWidth) //new Height is bigger then buffer
+        //    if (height > System.Console.BufferWidth) //new Height is bigger then buffer
         //    {
-        //        Console.BufferHeight = height;
-        //        Console.WindowHeight = height;
+        //        System.Console.BufferHeight = height;
+        //        System.Console.WindowHeight = height;
         //    }
         //    else
         //    {
-        //        Console.WindowHeight = height;
-        //        Console.BufferHeight = height;
+        //        System.Console.WindowHeight = height;
+        //        System.Console.BufferHeight = height;
         //    }
 
-        //    Console.BackgroundColor = ConsoleColor.Gray;
-        //    WindowManager.DrawColourBlock(Console.BackgroundColor, 0, 0, Console.BufferHeight, Console.BufferWidth); //Flush Buffer
+        //    System.Console.BackgroundColor = ConsoleColor.Gray;
+        //    WindowManager.DrawColourBlock(System.Console.BackgroundColor, 0, 0, System.Console.BufferHeight, System.Console.BufferWidth); //Flush Buffer
         //}
 
         public static void SetWindowTitle(string title)
         {
-            Console.Title = title;
+            System.Console.Title = title;
         }
     }
 }

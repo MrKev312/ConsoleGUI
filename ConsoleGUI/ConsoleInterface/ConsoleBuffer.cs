@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ConsoleGUI.ConsoleInterface.ANSI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -98,7 +99,16 @@ namespace ConsoleGUI.Windows.Base
                     }
                     break;
                 case RenderSupport.ANSI:
-
+                    int Width = ScreenBuffer.GetLength(0);
+                    int Height = ScreenBuffer.GetLength(1);
+                    StringBuilder stringBuilder = new(Width * Height + CompressedBuffer.Count * 10 * 2);
+                    foreach (var TextBit in CompressedBuffer)
+                    {
+                        stringBuilder.Append(ANSI_Converters.ConsoleColorToANSI(TextBit.ForegroundColor));
+                        stringBuilder.Append(ANSI_Converters.ConsoleColorToANSI(TextBit.BackgroundColor, false));
+                        stringBuilder.Append(TextBit.Text);
+                    }
+                    Console.WriteLine(stringBuilder.ToString());
                     break;
             }
         }
