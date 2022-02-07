@@ -2,7 +2,6 @@
 using ConsoleGUI.Inputs;
 using ConsoleGUI.Windows;
 using ConsoleGUI.Windows.Base;
-using TestProgram.Inputs;
 
 namespace TestProgram.Windows
 {

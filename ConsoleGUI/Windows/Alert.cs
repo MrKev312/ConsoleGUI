@@ -11,19 +11,19 @@ namespace ConsoleGUI.Windows
         private const int textLength = 46;
 
         public Alert(Window? parentWindow, string Message)
-            : base(parentWindow, "Message", (Console.WindowWidth / 2) - 25, 6, 50, 5 + (int)Math.Ceiling(((double)Message.Count() / textLength)))
+            : base(parentWindow, "Message", (Console.WindowWidth / 2) - 25, 6, 50, 5 + (int)Math.Ceiling((double)Message.Count() / textLength))
         {
             Create(parentWindow, Message);
         }
 
         public Alert(Window? parentWindow, string Message, string Title)
-            : base(parentWindow, Title, (Console.WindowWidth / 2) - 30, 6, 50, 5 + (int)Math.Ceiling(((double)Message.Count() / textLength)))
+            : base(parentWindow, Title, (Console.WindowWidth / 2) - 30, 6, 50, 5 + (int)Math.Ceiling((double)Message.Count() / textLength))
         {
             Create(parentWindow, Message);
         }
 
         public Alert(Window? parentWindow, string Message, ConsoleColor backgroundColour)
-            : base(parentWindow, "Message", (Console.WindowWidth / 2) - 25, 6, 50, 5 + (int)Math.Ceiling(((double)Message.Count() / textLength)))
+            : base(parentWindow, "Message", (Console.WindowWidth / 2) - 25, 6, 50, 5 + (int)Math.Ceiling((double)Message.Count() / textLength))
         {
             BackgroundColour = backgroundColour;
 
@@ -31,7 +31,7 @@ namespace ConsoleGUI.Windows
         }
 
         public Alert(Window? parentWindow, string Message, ConsoleColor backgroundColour, string Title)
-            : base(parentWindow, Title, (Console.WindowWidth / 2) - 25, 6, 50, 5 + (int)Math.Ceiling(((double)Message.Count() / textLength)))
+            : base(parentWindow, Title, (Console.WindowWidth / 2) - 25, 6, 50, 5 + (int)Math.Ceiling((double)Message.Count() / textLength))
         {
             BackgroundColour = backgroundColour;
 

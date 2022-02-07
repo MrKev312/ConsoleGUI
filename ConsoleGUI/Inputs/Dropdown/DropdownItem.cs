@@ -23,7 +23,7 @@ namespace ConsoleGUI.Inputs
 
         public override void Draw()
         {
-            string paddedText = (Text).PadRight(Width, ' ');
+            string paddedText = Text.PadRight(Width, ' ');
 
             if (Selected)
                 WindowManager.WriteText(ref WindowBuffer, paddedText, new() { textColor = SelectedTextColour, backgroundColor = SelectedBackgroundColour });

@@ -1,5 +1,4 @@
-﻿using ConsoleGUI.Windows.Base;
-using System;
+﻿using System;
 using System.Timers;
 
 namespace ConsoleGUI

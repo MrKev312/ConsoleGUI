@@ -28,7 +28,7 @@ namespace ConsoleGUI.Inputs
             string paddedText = ('[' + Text + ']').PadRight(Width, ' ');
 
             if (Selected)
-                WindowManager.WriteText(ref WindowBuffer, paddedText, new() { textColor= SelectedTextColour, backgroundColor= SelectedBackgroundColour });
+                WindowManager.WriteText(ref WindowBuffer, paddedText, new() { textColor = SelectedTextColour, backgroundColor = SelectedBackgroundColour });
             else
                 WindowManager.WriteText(ref WindowBuffer, paddedText, new() { textColor = TextColour, backgroundColor = BackgroudColour });
         }

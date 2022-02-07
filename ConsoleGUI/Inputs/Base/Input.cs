@@ -32,39 +32,39 @@ namespace ConsoleGUI.Inputs.Base
         public virtual void CharacterPress(ConsoleKeyInfo Key)
         {
             //if (Key.Modifiers == 0)
-                switch (Key.Key, Key.Modifiers)
-                {
-                    case (ConsoleKey.Tab, 0):
-                        Tab();
-                        break;
-                    case (ConsoleKey.Enter, 0):
-                        Enter();
-                        break;
-                    case (ConsoleKey.LeftArrow, 0):
-                        CursorMoveLeft();
-                        break;
-                    case (ConsoleKey.RightArrow, 0):
-                        CursorMoveRight();
-                        break;
-                    case (ConsoleKey.UpArrow, 0):
-                        CursorMoveUp();
-                        break;
-                    case (ConsoleKey.DownArrow, 0):
-                        CursorMoveDown();
-                        break;
-                    case (ConsoleKey.Backspace, 0):
-                        BackSpace();
-                        break;
-                    case (ConsoleKey.Home, 0):
-                        CursorToStart();
-                        break;
-                    case (ConsoleKey.End, 0):
-                        CursorToEnd();
-                        break;
-                    default:
-                        AddLetter(Key.KeyChar); // Letter(input.KeyChar);
-                        break;
-                }
+            switch (Key.Key, Key.Modifiers)
+            {
+                case (ConsoleKey.Tab, 0):
+                    Tab();
+                    break;
+                case (ConsoleKey.Enter, 0):
+                    Enter();
+                    break;
+                case (ConsoleKey.LeftArrow, 0):
+                    CursorMoveLeft();
+                    break;
+                case (ConsoleKey.RightArrow, 0):
+                    CursorMoveRight();
+                    break;
+                case (ConsoleKey.UpArrow, 0):
+                    CursorMoveUp();
+                    break;
+                case (ConsoleKey.DownArrow, 0):
+                    CursorMoveDown();
+                    break;
+                case (ConsoleKey.Backspace, 0):
+                    BackSpace();
+                    break;
+                case (ConsoleKey.Home, 0):
+                    CursorToStart();
+                    break;
+                case (ConsoleKey.End, 0):
+                    CursorToEnd();
+                    break;
+                default:
+                    AddLetter(Key.KeyChar); // Letter(input.KeyChar);
+                    break;
+            }
         }
 
         public virtual void AddLetter(char letter) { }

@@ -9,7 +9,7 @@ namespace ConsoleGUI
     public class WindowManager
     {
         // Singleton
-        private readonly static Lazy<WindowManager> _lazy = new(() => new WindowManager());
+        private static readonly Lazy<WindowManager> _lazy = new(() => new WindowManager());
         public static WindowManager Instance { get { return _lazy.Value; } }
 
 
@@ -19,7 +19,7 @@ namespace ConsoleGUI
         }
 
         public static RenderSupport RenderSupport { get; private set; } = RenderSupport.Standard;
-        public  static void SetScreenRenderer(RenderSupport renderSupport)
+        public static void SetScreenRenderer(RenderSupport renderSupport)
         {
             RenderSupport = renderSupport;
         }
@@ -59,7 +59,7 @@ namespace ConsoleGUI
                 return;
             for (int i = startY; i < endY; i++)
             {
-                WriteText(ref Buffer!, "".PadLeft(endX - startX), new() { startX = startX, startY = i, backgroundColor = colour});
+                WriteText(ref Buffer!, "".PadLeft(endX - startX), new() { startX = startX, startY = i, backgroundColor = colour });
             }
         }
 

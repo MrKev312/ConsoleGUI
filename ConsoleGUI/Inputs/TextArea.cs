@@ -234,7 +234,7 @@ namespace ConsoleGUI.Inputs
             //Draw Scroll Bar
             WindowManager.DrawColourBlock(ref WindowBuffer!, ConsoleColor.White, Width - 1, 0, Width, Height);
 
-            double linesPerPixel = (double)lines.Count() / (Height);
+            double linesPerPixel = (double)lines.Count() / Height;
             int postion = 0;
             if (linesPerPixel > 0)
                 postion = (int)Math.Floor(cursorDisplayX / linesPerPixel);

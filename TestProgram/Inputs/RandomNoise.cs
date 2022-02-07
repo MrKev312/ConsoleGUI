@@ -23,7 +23,7 @@ namespace TestProgram.Inputs
 
         public override void CharacterPress(ConsoleKeyInfo Key)
         {
-            
+
             if (Key.Key == ConsoleKey.Enter)
             {
                 Generate();
@@ -36,7 +36,7 @@ namespace TestProgram.Inputs
 
         public override void Draw()
         {
-            
+
         }
 
         private void Generate()

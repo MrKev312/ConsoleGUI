@@ -8,7 +8,7 @@ namespace ConsoleGUI.Inputs
     public class Label : Input
     {
         private string Text = "";
-        private ConsoleColor TextColour = ConsoleColor.Black;
+        public ConsoleColor TextColour = ConsoleColor.Black;
         public ConsoleColor BackgroundColour = ConsoleColor.Gray;
 
         public Label(Window parentWindow, string text, int x, int y, string iD) : base(parentWindow, x, y, text.Count(), 1, iD)

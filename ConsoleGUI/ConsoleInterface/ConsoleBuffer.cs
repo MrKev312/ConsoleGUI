@@ -1,12 +1,8 @@
-﻿using Newtonsoft.Json;
-using ConsoleGUI.ConsoleInterface.ANSI;
+﻿using ConsoleGUI.ConsoleInterface.ANSI;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ConsoleGUI.Windows.Base
 {
@@ -20,6 +16,11 @@ namespace ConsoleGUI.Windows.Base
         /// </summary>
         public ConsoleColor? backgroundColor = ConsoleColor.Black;
     }
+
+    public class CompressedConsoleBuffer : List<ConsoleString>
+    {
+    }
+
     public static class ConsoleBuffer
     {
         public enum RenderSupport
@@ -82,16 +83,15 @@ namespace ConsoleGUI.Windows.Base
             }
         }
 
-        // TODO: speed up, currently takes ~482 ms to draw uncompressable frame (all random, no repeating) at default resolution
         public static void WriteBufferToConsole(ConsoleCharacter[,] ScreenBuffer, int x = 0, int y = 0, bool DefaultNullToBlack = false)
         {
-            List<ConsoleString> CompressedBuffer = CompressBuffer(ScreenBuffer, x, y, DefaultNullToBlack);
+            CompressedConsoleBuffer CompressedBuffer = CompressBuffer(ScreenBuffer, x, y, DefaultNullToBlack);
             Console.SetCursorPosition(0, 0);
             switch (WindowManager.RenderSupport)
             {
                 default:
                 case RenderSupport.Standard:
-                    foreach (var TextBit in CompressedBuffer)
+                    foreach (ConsoleString? TextBit in CompressedBuffer)
                     {
                         Console.ForegroundColor = TextBit.ForegroundColor;
                         Console.BackgroundColor = TextBit.BackgroundColor;
@@ -102,7 +102,7 @@ namespace ConsoleGUI.Windows.Base
                     int Width = ScreenBuffer.GetLength(0);
                     int Height = ScreenBuffer.GetLength(1);
                     StringBuilder stringBuilder = new(Width * Height + CompressedBuffer.Count * 10 * 2);
-                    foreach (var TextBit in CompressedBuffer)
+                    foreach (ConsoleString? TextBit in CompressedBuffer)
                     {
                         stringBuilder.Append(ANSI_Converters.ConsoleColorToANSI(TextBit.ForegroundColor));
                         stringBuilder.Append(ANSI_Converters.ConsoleColorToANSI(TextBit.BackgroundColor, false));
@@ -113,7 +113,7 @@ namespace ConsoleGUI.Windows.Base
             }
         }
 
-        public static List<ConsoleString> CompressBuffer(ConsoleCharacter[,] ScreenBuffer, int x, int y, bool DefaultNullToBlack)
+        public static CompressedConsoleBuffer CompressBuffer(ConsoleCharacter[,] ScreenBuffer, int x, int y, bool DefaultNullToBlack)
         {
             int ConsoleWidth = Console.BufferWidth;
             int ConsoleHeight = Console.BufferHeight;
@@ -126,7 +126,7 @@ namespace ConsoleGUI.Windows.Base
                 Height = ConsoleHeight;
 
             // Split Buffer into sections with matching colors
-            List<ConsoleString> CompressedBuffer = new();
+            CompressedConsoleBuffer CompressedBuffer = new();
             StringBuilder Text = new(Console.BufferWidth);
             ConsoleColor? Foreground = null;
             ConsoleColor? Background = null;
@@ -192,5 +192,6 @@ namespace ConsoleGUI.Windows.Base
 
             return CompressedBuffer;
         }
+
     }
 }

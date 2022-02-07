@@ -16,13 +16,13 @@ namespace ConsoleGUI.Windows
         public DialogResult Result = DialogResult.Cancel;
 
         public Confirm(Window? parentWindow, string Message, string Title = "Confirm")
-            : base(parentWindow, Title, (Console.WindowWidth / 2) - 25, 6, 50, 5 + (int)Math.Ceiling(((double)Message.Count() / textLength)))
+            : base(parentWindow, Title, (Console.WindowWidth / 2) - 25, 6, 50, 5 + (int)Math.Ceiling((double)Message.Count() / textLength))
         {
             Create(parentWindow, Message);
         }
 
         public Confirm(Window? parentWindow, string Message, ConsoleColor backgroundColour, string Title = "Message")
-            : base(parentWindow, Title, (Console.WindowWidth / 2) - 25, 6, 50, 5 + (int)Math.Ceiling(((double)Message.Count() / textLength)))
+            : base(parentWindow, Title, (Console.WindowWidth / 2) - 25, 6, 50, 5 + (int)Math.Ceiling((double)Message.Count() / textLength))
         {
             BackgroundColour = backgroundColour;
 
@@ -34,7 +34,7 @@ namespace ConsoleGUI.Windows
             int count = 0;
             while ((count * 45) < Message.Count())
             {
-                string splitMessage = Message.PadRight(textLength * (count + 1), ' ').Substring((count * textLength), textLength);
+                string splitMessage = Message.PadRight(textLength * (count + 1), ' ').Substring(count * textLength, textLength);
                 Label messageLabel = new(this, splitMessage, 2, 2 + count, "messageLabel");
                 Inputs.Add(messageLabel);
 

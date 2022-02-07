@@ -20,7 +20,7 @@ namespace RW.EventfulConcurrentQueue
 
         public bool TryDequeue(out T result)
         {
-            var success = _queue.TryDequeue(out result);
+            bool success = _queue.TryDequeue(out result);
 
             if (success)
             {
