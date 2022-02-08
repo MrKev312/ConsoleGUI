@@ -1,7 +1,9 @@
 ﻿using ConsoleGUI;
+using ConsoleGUI.Drawing.Imaging;
 using ConsoleGUI.Inputs;
 using ConsoleGUI.Windows;
 using ConsoleGUI.Windows.Base;
+using SixLabors.ImageSharp;
 
 namespace TestProgram.Windows
 {
@@ -12,13 +14,15 @@ namespace TestProgram.Windows
             BackgroundColour = ConsoleColor.DarkMagenta;
             //_ = new RandomNoise(this, 0, 0, Width, Height, "rando");
 
-            Button oneBtn = new(this, 2, 2, "Button One", "oneBtn") { Action = delegate () { _ = new Alert(this, "You Clicked Button One", ConsoleColor.White); } };
-            Button twoBtn = new(this, 2, 4, "Long Alert", "twoBtn") { Action = delegate () { _ = new Alert(this, "A web browser (commonly referred to as a browser) is a software application for retrieving, presenting and traversing information resources on the World Wide Web", ConsoleColor.White); } };
-            Button threeBtn = new(this, 2, 6, "Test screen", "tstBtn") { Action = delegate () { _ = new RandomNoiseTestScreen(this, 0, 0, Width, Height); } };
+            ImageBox imgBox = new ImageBox(this, ".\\image.gif", 0, 0, Console.WindowWidth, Console.WindowHeight, "image");
 
-            Button displayAlertBtn = new(this, 20, 2, "Display Alert", "displayAlertBtn") { Action = delegate () { _ = new Alert(this, "This is an Alert!", ConsoleColor.White); } };
-            Button displayConfirmBtn = new(this, 20, 4, "Display Confirm", "displayConfirmBtn") { Action = delegate () { Confirm cf = new(this, "This is a Confirm!", ConsoleColor.White); if (cf.ShowDialog() == DialogResult.OK) { } } };
-            Button exitBtn = new(this, 20, 6, "Exit", "exitBtn") { Action = delegate () { ExitWindow(); } };
+            Button oneBtn = new(this, 2, 2, "Button One", "oneBtn") { Action = delegate () { _ = new Alert(this, "You Clicked Button One", ConsoleColor.White); } };
+            //Button twoBtn = new(this, 2, 4, "Long Alert", "twoBtn") { Action = delegate () { _ = new Alert(this, "A web browser (commonly referred to as a browser) is a software application for retrieving, presenting and traversing information resources on the World Wide Web", ConsoleColor.White); } };
+            //Button threeBtn = new(this, 2, 6, "Test screen", "tstBtn") { Action = delegate () { _ = new RandomNoiseTestScreen(this, 0, 0, Width, Height); } };
+
+            //Button displayAlertBtn = new(this, 20, 2, "Display Alert", "displayAlertBtn") { Action = delegate () { _ = new Alert(this, "This is an Alert!", ConsoleColor.White); } };
+            //Button displayConfirmBtn = new(this, 20, 4, "Display Confirm", "displayConfirmBtn") { Action = delegate () { Confirm cf = new(this, "This is a Confirm!", ConsoleColor.White); if (cf.ShowDialog() == DialogResult.OK) { } } };
+            //Button exitBtn = new(this, 20, 6, "Exit", "exitBtn") { Action = delegate () { ExitWindow(); } };
 
             ////Button displaySettingBtn = new(this, 40, 20, "Display Settings", "displaySettingsBtn") { Action = delegate () { _ = new SettingsWindow(this); } };
             //Button displaySaveBtn = new(this, 40, 4, "Display Save Menu", "displaySaveMenuBtn") { Action = delegate () { _ = new SaveMenu(this, "Untitled.txt", Directory.GetCurrentDirectory(), "Test Data"); } };

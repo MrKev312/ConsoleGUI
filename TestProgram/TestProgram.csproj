@@ -7,6 +7,7 @@
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\ConsoleGUI.Drawing\ConsoleGUI.Drawing.csproj" />
 		<ProjectReference Include="..\ConsoleGUI\ConsoleGUI.csproj" />
 	</ItemGroup>
 </Project>

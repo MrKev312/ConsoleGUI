@@ -63,7 +63,7 @@ namespace ConsoleGUI
             }
         }
 
-        public static void WriteText(ref ConsoleCharacter[,]? Buffer, string text, ConsoleBufferWritingSettings consoleBufferWritingSettings)
+        public static void WriteText(ref ConsoleCharacter[,]? Buffer, string text, WritingSettings consoleBufferWritingSettings)
         {
             if (Buffer == null)
                 return;

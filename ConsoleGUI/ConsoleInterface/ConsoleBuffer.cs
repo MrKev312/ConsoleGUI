@@ -6,9 +6,10 @@ using System.Text.RegularExpressions;
 
 namespace ConsoleGUI.Windows.Base
 {
-    public class ConsoleBufferWritingSettings
+    public class WritingSettings
     {
         public int startX, startY = 0;
+        public int Width, Height = 0;
         public ConsoleColor textColor = ConsoleColor.White;
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace ConsoleGUI.Windows.Base
 
         public static ConsoleColor DefaultTextColor = ConsoleColor.White;
         public static ConsoleColor DefaultBackgroundColor = ConsoleColor.Black;
-        public static void BufferWrite(ref ConsoleCharacter[,] Buffer, string text, ConsoleBufferWritingSettings consoleBufferWritingSettings)
+        public static void BufferWrite(ref ConsoleCharacter[,] Buffer, string text, WritingSettings consoleBufferWritingSettings)
         {
             string[] lines = text.Split(
                 new string[] { "\r\n", "\r", "\n" },

@@ -15,7 +15,7 @@ namespace ConsoleGUI.Inputs.Base
         public string? ID { get; set; }
         public Window? ParentWindow { get; set; }
         public ConsoleCharacter[,]? WindowBuffer;
-        public Input(Window parentWindow, int xPostion, int yPostion, int width, int height, string iD)
+        public Input(Window? parentWindow, int xPostion, int yPostion, int width, int height, string iD)
         {
             ParentWindow = parentWindow;
             ID = iD;
@@ -26,7 +26,7 @@ namespace ConsoleGUI.Inputs.Base
             Height = height;
             Width = width;
 
-            parentWindow.Inputs.Add(this);
+            parentWindow?.Inputs.Add(this);
         }
 
         public virtual void CharacterPress(ConsoleKeyInfo Key)

@@ -1,6 +1,7 @@
 ﻿using ConsoleGUI.Windows.Base;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Linq;
 
@@ -10,7 +11,7 @@ namespace ConsoleGUI.Drawing.Imaging
     {
         static readonly int[] cColors = { 0x000000, 0x000080, 0x008000, 0x008080, 0x800000, 0x800080, 0x808000, 0xC0C0C0, 0x808080, 0x0000FF, 0x00FF00, 0x00FFFF, 0xFF0000, 0xFF00FF, 0xFFFF00, 0xFFFFFF };
         static readonly Rgb24[] cTable = cColors.Select(x => (Rgb24)Color.ParseHex(x.ToString("X8"))).ToArray();
-        public static ConsoleCharacter ColorToCharacter(Rgb24 color)
+        public static ConsoleCharacter ColorToConsoleCharacter(Rgb24 color)
         {
             int Best = int.MaxValue;
             int RunnerUp = 0;
@@ -52,6 +53,29 @@ namespace ConsoleGUI.Drawing.Imaging
             }
 
             return new ConsoleCharacter() { Character = ratios[index], ForegroundColor = (ConsoleColor?)Array.IndexOf(cTable, BestColor), BackgroundColor = (ConsoleColor?)Array.IndexOf(cTable, RunnerUpColor) };
+        }
+
+        public static void ImageToBuffer(ref ConsoleCharacter[,] buffer, Image image, WritingSettings settings)
+        {
+            float imageRatio = image.Width / image.Height;
+            float bufferRatio = settings.Width / settings.Height;
+
+            if (imageRatio >= bufferRatio)
+            {
+                image.Mutate(image => image.Resize(settings.Width, 0));
+            }
+            else
+            {
+                image.Mutate(image => image.Resize(0, settings.Height));
+            }
+
+            for (int i = 0; i < image.Width; i++)
+            {
+                for (int j = 0; j < image.Height; j++)
+                {
+                    buffer[i + settings.startX, j + settings.startY] = ColorToConsoleCharacter(((Image<Rgb24>)image)[i, j]);
+                }
+            }
         }
     }
 }
