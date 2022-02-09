@@ -57,23 +57,24 @@ namespace ConsoleGUI.Drawing.Imaging
 
         public static void ImageToBuffer(ref ConsoleCharacter[,] buffer, Image image, WritingSettings settings)
         {
-            float imageRatio = image.Width / image.Height;
+            Image tempImage = image.CloneAs<Rgb24>();
+            float imageRatio = tempImage.Width / tempImage.Height;
             float bufferRatio = settings.Width / settings.Height;
 
             if (imageRatio >= bufferRatio)
             {
-                image.Mutate(image => image.Resize(settings.Width, 0));
+                tempImage.Mutate(tempImage => tempImage.Resize(settings.Width * 2, (int)Math.Round(settings.Width / imageRatio)));
             }
             else
             {
-                image.Mutate(image => image.Resize(0, settings.Height));
+                tempImage.Mutate(tempImage => tempImage.Resize(settings.Height * (int)Math.Round(imageRatio) * 2, settings.Height));
             }
 
-            for (int i = 0; i < image.Width; i++)
+            for (int i = 0; i < tempImage.Width; i++)
             {
-                for (int j = 0; j < image.Height; j++)
+                for (int j = 0; j < tempImage.Height; j++)
                 {
-                    buffer[i + settings.startX, j + settings.startY] = ColorToConsoleCharacter(((Image<Rgb24>)image)[i, j]);
+                    buffer[i + settings.startX, j + settings.startY] = ColorToConsoleCharacter(((Image<Rgb24>)tempImage)[i, j]);
                 }
             }
         }

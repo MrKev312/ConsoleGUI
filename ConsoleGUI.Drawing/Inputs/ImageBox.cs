@@ -21,7 +21,10 @@ namespace ConsoleGUI.Drawing.Imaging
 
         public override void Draw()
         {
-            ImageConverter.ImageToBuffer(ref WindowBuffer!, image!, new WritingSettings() { Width = Width, Height = Height });
+            if (image != null)
+            {
+                ImageConverter.ImageToBuffer(ref WindowBuffer!, image, new WritingSettings() { Width = Width, Height = Height });
+            }
         }
 
         public void SetImage(string imagePath)

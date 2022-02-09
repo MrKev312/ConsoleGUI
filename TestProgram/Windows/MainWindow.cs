@@ -14,7 +14,7 @@ namespace TestProgram.Windows
             BackgroundColour = ConsoleColor.DarkMagenta;
             //_ = new RandomNoise(this, 0, 0, Width, Height, "rando");
 
-            ImageBox imgBox = new ImageBox(this, ".\\image.gif", 0, 0, Console.WindowWidth, Console.WindowHeight, "image");
+            ImageBox imgBox = new(this, ".\\image.png", 0, 0, Console.WindowWidth, Console.WindowHeight, "image");
 
             Button oneBtn = new(this, 2, 2, "Button One", "oneBtn") { Action = delegate () { _ = new Alert(this, "You Clicked Button One", ConsoleColor.White); } };
             //Button twoBtn = new(this, 2, 4, "Long Alert", "twoBtn") { Action = delegate () { _ = new Alert(this, "A web browser (commonly referred to as a browser) is a software application for retrieving, presenting and traversing information resources on the World Wide Web", ConsoleColor.White); } };
