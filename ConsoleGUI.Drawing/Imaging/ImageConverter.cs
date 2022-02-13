@@ -9,7 +9,6 @@ namespace ConsoleGUI.Drawing.Imaging
 {
     public static class ImageConverter
     {
-        static readonly Rgb24[] cTable = ConsolePixelColor.cColors.Select(x => (Rgb24)Color.ParseHex(x.ToString("X8"))).ToArray();
         public static ConsoleCharacter ColorToConsoleCharacter(Rgb24 color)
         {
             ConsolePixelColor c = ConsolePixelColor.GetClosestColor(color);
@@ -25,16 +24,16 @@ namespace ConsoleGUI.Drawing.Imaging
         public static void ImageToBuffer(ref ConsoleCharacter[,] buffer, Image image, WritingSettings settings)
         {
             Image tempImage = image.CloneAs<Rgb24>();
-            float imageRatio = tempImage.Width / tempImage.Height;
-            float bufferRatio = settings.Width / settings.Height;
+            float imageRatio = tempImage.Width / (float)tempImage.Height;
+            float bufferRatio = settings.Width / (float)settings.Height;
 
             if (imageRatio >= bufferRatio)
             {
-                tempImage.Mutate(tempImage => tempImage.Resize(settings.Width * 2, (int)Math.Round(settings.Width / imageRatio)));
+                tempImage.Mutate(tempImage => tempImage.Resize(settings.Width * 2, (int)Math.Ceiling(settings.Width / imageRatio)));
             }
             else
             {
-                tempImage.Mutate(tempImage => tempImage.Resize(settings.Height * (int)Math.Round(imageRatio) * 2, settings.Height));
+                tempImage.Mutate(tempImage => tempImage.Resize((int)Math.Ceiling(settings.Height * imageRatio) * 2, settings.Height));
             }
 
             for (int i = 0; i < tempImage.Width; i++)

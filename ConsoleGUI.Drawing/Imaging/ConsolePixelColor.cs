@@ -18,57 +18,68 @@ namespace ConsoleGUI.Drawing.Imaging
             {
                 if (ConsolePixelColorCombosInternal == null)
                 {
-                    ConsolePixelColorCombosInternal = GenerateColorCombos();
+                    List<ConsolePixelColor> consolePixelColors = new();
+                    for (int i = 0; i < cColors.Length; i++)
+                    {
+                        consolePixelColors.Add(new ConsolePixelColor() { Background = (ConsoleColor)i, Ratio = 0 });
+                        for (int j = i + 1; j < cColors.Length; j++)
+                        {
+                            for (int k = 1; k < ratios.Length; k++)
+                            {
+                                consolePixelColors.Add(new ConsolePixelColor() { Foreground = (ConsoleColor)j, Background = (ConsoleColor)i, Ratio = k });
+                            }
+                        }
+                    }
+                    ConsolePixelColorCombosInternal = consolePixelColors.ToArray();
+                    ConsolePixelColorCombosLength = ConsolePixelColorCombosInternal.Length;
                 }
                 return ConsolePixelColorCombosInternal!;
             }
         }
-        public Rgb24 EmulatedColor { get { return Color.ParseHex(((Ratio * cColors[(int)(Foreground ?? 0)] + (ratios.Length - Ratio) * cColors[(int)Background]) / 4).ToString("X8")[2..]); } }
+        public static int ConsolePixelColorCombosLength { get; private set; }
+        private (int, int, int)? EmulatedColorCache;
+        public (int, int, int) EmulatedColor
+        {
+            get
+            {
+                if (EmulatedColorCache == null)
+                {
+                    var Fore = Ratio * cColors[(int)(Foreground ?? 0)];
+                    var Back = (ratios.Length - Ratio) * cColors[(int)Background];
+
+                    EmulatedColorCache = (
+                    ((Ratio * ((Fore & 0xFF0000) >> 16) + (ratios.Length - Ratio) * ((Back & 0xFF0000) >> 16)) / 4),
+                    ((Ratio * ((Fore & 0xFF00) >> 8) + (ratios.Length - Ratio) * ((Back & 0xFF00) >> 8)) / 4),
+                    ((Ratio * ((Fore & 0xFF) >> 0) + (ratios.Length - Ratio) * ((Back & 0xFF) >> 0)) / 4));
+                }
+
+                return ((int, int, int))EmulatedColorCache;
+            }
+        }
         public ConsoleColor? Foreground;
         public ConsoleColor Background;
         public int Ratio = 0;
 
-        public static ConsolePixelColor[] GenerateColorCombos()
-        {
-            List<ConsolePixelColor> consolePixelColors = new();
-            for (int i = 0; i < cColors.Length; i++)
-            {
-                consolePixelColors.Add(new ConsolePixelColor() { Background = (ConsoleColor)i, Ratio = 0 });
-                for (int j = i + 1; j < cColors.Length; j++)
-                {
-                    for (int k = 1; k < ratios.Length; k++)
-                    {
-                        consolePixelColors.Add(new ConsolePixelColor() { Foreground = (ConsoleColor)j, Background = (ConsoleColor)i, Ratio = k });
-                    }
-                }
-            }
-
-            foreach (var item in consolePixelColors)
-            {
-                Debug.Print($"Emulated color: {item.EmulatedColor:X8}, Foreground color: {item.Foreground}, Background color: {item.Background}, Ratio: {item.Ratio}");
-            }
-
-            return consolePixelColors.ToArray();
-        }
-
         public static ConsolePixelColor GetClosestColor(Rgb24 Input)
         {
-            int LowestDistance = int.MaxValue;
+            float LowestDistance = float.MaxValue;
             int Index = 0;
-            for (int i = 0; i < ConsolePixelColorCombos.Length; i++)
+            for (int i = 0; i < ConsolePixelColorCombosLength; i++)
             {
-                int dR = Input.R - ConsolePixelColorCombos[i].EmulatedColor.R;
-                int dG = Input.G - ConsolePixelColorCombos[i].EmulatedColor.G;
-                int dB = Input.B - ConsolePixelColorCombos[i].EmulatedColor.B;
-                int DistanceSq = dR * dR + dG * dG + dB * dB;
-                if (DistanceSq < LowestDistance)
-                {
-                    LowestDistance = DistanceSq;
-                    Index = i;
-                }
+                (int, int, int) EmulatedColor = ConsolePixelColorCombos[i].EmulatedColor;
+                int dR = Input.R - EmulatedColor.Item1;
+                int dG = Input.G - EmulatedColor.Item2;
+                int dB = Input.B - EmulatedColor.Item3;
+                float RedMean = (Input.R + EmulatedColor.Item1) / 2;
+                float DistanceSq = (2 + RedMean / 256) * (dR * dR) + 4 * (dG * dG) + (2 + (255 - RedMean) / 256) * (dB * dB);
                 if (LowestDistance == 0)
                 {
                     break;
+                } 
+                else if (DistanceSq < LowestDistance)
+                {
+                    LowestDistance = DistanceSq;
+                    Index = i;
                 }
             }
 

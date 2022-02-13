@@ -20,7 +20,7 @@ namespace TestProgram
             Console.Clear();
 #endif
             WindowManager.SetupWindow();
-            //WindowManager.SetScreenRenderer(ConsoleGUI.Windows.Base.ConsoleBuffer.RenderSupport.ANSI);
+            WindowManager.SetScreenRenderer(ConsoleGUI.Windows.Base.ConsoleBuffer.RenderSupport.ANSI);
             _ = new Alert(null, "Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa. I feel like this test is supercalifragilisticexpialidocious, meaning it's very amazing!", "Test Label Here");
             Confirm confirm = new(null, "Do you wish to run this program?");
             DialogResult result = confirm.ShowDialog();

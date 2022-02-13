@@ -53,7 +53,11 @@ namespace ConsoleGUI.Windows.Base
                         ForegroundColor = consoleBufferWritingSettings.textColor,
                         BackgroundColor = consoleBufferWritingSettings.backgroundColor ?? Buffer[xPos, yPos].BackgroundColor
                     };
-                    Buffer[xPos, yPos] = consoleCharacter;
+                    try
+                    {
+                        Buffer[xPos, yPos] = consoleCharacter;
+                    }
+                    catch (Exception ex) { }
                     xPos++;
                     if (xPos >= BufferWidth)
                     {
@@ -109,7 +113,7 @@ namespace ConsoleGUI.Windows.Base
                         stringBuilder.Append(ANSI_Converters.ConsoleColorToANSI(TextBit.BackgroundColor, false));
                         stringBuilder.Append(TextBit.Text);
                     }
-                    Console.WriteLine(stringBuilder.ToString());
+                    Console.Write(stringBuilder.ToString());
                     break;
             }
         }
@@ -166,8 +170,8 @@ namespace ConsoleGUI.Windows.Base
                         };
                         CompressedBuffer.Add(consoleString);
 
-                        Foreground = consoleCharacter.ForegroundColor;
-                        Background = consoleCharacter.BackgroundColor;
+                        Foreground = consoleCharacter.ForegroundColor.GetValueOrDefault();
+                        Background = consoleCharacter.BackgroundColor.GetValueOrDefault();
                         Text.Clear();
                         Text.Append(consoleCharacter.Character);
                     }
